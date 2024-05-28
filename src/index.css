@@ -335,6 +335,12 @@ ol {
   }
 }
 
+.disabled-button {
+  background-color: grey;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
 /* Fancy animation for showing the "Game Over" element */
 @keyframes pop-in {
   0% {
