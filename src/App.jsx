@@ -7,6 +7,7 @@ import Log from './components/Log.jsx';
 import {WINNING_COMBINATIONS} from './winning-combinations.js'
 import GameOver from './components/GameOver.jsx';
 
+
 const initialGameBoard = [
   [null, null, null],
   [null, null, null],
@@ -23,17 +24,7 @@ function deriveActivePlayer(gameTurns){
   return currentPlayer
 }
 
-function App() {
-  const [players, setPlayers] =  useState({
-    'X': 'Player1',
-    'O' : 'Player2'
-  })
-  const [gameTurns, setGameTurns] = useState([]);
-
-  //const [activePlayer, setActivePlayer] = useState('X');
-
-  const activePlayer = deriveActivePlayer(gameTurns);
-
+function deriveGameBoard(gameTurns){  
   let gameBoard = [...initialGameBoard.map(array => [...array])]; 
 
   for(const turn of gameTurns){
@@ -43,7 +34,11 @@ function App() {
 
       gameBoard[row][col] = player;
   }
+  return gameBoard;
 
+}
+
+function deriveWinner(gameBoard, players){
   let winner= null;
 
   for (const combination of WINNING_COMBINATIONS){
@@ -60,20 +55,26 @@ function App() {
     }
   }
 
-  const hasDraw = gameTurns.length === 9 && !winner;
+  return winner
+}
 
+function App() {
+  const [players, setPlayers] =  useState({
+    'X': 'Player1',
+    'O' : 'Player2'
+  })
+  const [gameTurns, setGameTurns] = useState([]);
+
+
+  const activePlayer = deriveActivePlayer(gameTurns);
+  const gameBoard = deriveGameBoard(gameTurns);
+  const winner = deriveWinner(gameBoard, players);
+  const hasDraw = gameTurns.length === 9 && !winner;
   function handleSelectSquare(rowIndex, colIndex){
     
-    //setActivePlayer((curActivePlayer) => curActivePlayer === 'X' ? 'O' : 'X');
-    
+
     setGameTurns(prevTurns => {
 
-      /*let currentPlayer = 'X';
-
-      if (prevTurns.length > 0  && prevTurns[0].player === 'X'){
-        currentPlayer = 'O';
-      }*/
-  
       const currentPlayer = deriveActivePlayer(prevTurns);
       const updatedTurns = [
         { square: {row: rowIndex, col: colIndex }, player: currentPlayer },
